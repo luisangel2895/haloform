@@ -1,0 +1,19 @@
+{
+  "name": "formix",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Headless, schema-driven, cross-platform form engine for React and React Native",
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.1.0",
+    "tsup": "^8.4.0"
+  }
+}

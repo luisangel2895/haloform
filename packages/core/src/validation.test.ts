@@ -672,6 +672,37 @@ describe("validating flag", () => {
 });
 
 // ---------------------------------------------------------------------------
+// async validator exception
+// ---------------------------------------------------------------------------
+
+describe("async validator exception", () => {
+  it("clears stale error when async validator throws (non-abort)", async () => {
+    let shouldThrow = true;
+    const schema = createForm({
+      email: f.text({
+        validate: (_value: string, _signal: AbortSignal) =>
+          new Promise<true | string>((resolve, reject) => {
+            if (shouldThrow) reject(new Error("Network error"));
+            else resolve(true);
+          }),
+      }),
+    });
+    const store = createFormStore(schema);
+    const engine = createValidationEngine(store, { debounceMs: 0 });
+
+    // First: set an error
+    store.setError("email", "already taken");
+
+    // Validator throws — should clear the stale error
+    store.setValue("email", "new@example.com");
+    await engine.validateField("email");
+
+    const fields = store.getState().fields as Record<string, { error: string | null }>;
+    expect(fields.email.error).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
 // dispose
 // ---------------------------------------------------------------------------
 

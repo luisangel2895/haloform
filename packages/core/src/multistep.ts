@@ -153,6 +153,7 @@ export function createMultiStepStore<
     },
 
     prevStep: () => {
+      if (navigating) return;
       if (currentStep > 0) {
         currentStep--;
         notifyStepChange();
@@ -160,6 +161,7 @@ export function createMultiStepStore<
     },
 
     goToStep: (index: number) => {
+      if (navigating) return;
       if (index >= 0 && index < schema.steps.length) {
         currentStep = index;
         notifyStepChange();

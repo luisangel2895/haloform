@@ -167,8 +167,10 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
           store.setError(name, error);
           return error;
         } catch {
-          // If aborted, ignore
+          // If aborted, ignore — another validation is handling this field
           if (ac.signal.aborted) return null;
+          // Non-abort exception (e.g., network error): clear stale error
+          store.setError(name, null);
           return null;
         } finally {
           const currentFs = fieldStates.get(name);

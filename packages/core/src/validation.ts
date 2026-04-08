@@ -134,6 +134,7 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
     // 1. Run built-in validators
     const builtInError = runBuiltInValidation(fieldDef, value);
     if (builtInError) {
+      store.setValidating(name, false);
       store.setError(name, builtInError);
       return builtInError;
     }
@@ -141,6 +142,7 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
     // 2. Run custom validator if present
     const customValidate = fieldDef.config.validate;
     if (!customValidate) {
+      store.setValidating(name, false);
       store.setError(name, null);
       return null;
     }
@@ -173,8 +175,8 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
           if (currentFs?.abortController === ac) {
             currentFs.abortController = null;
           }
-          // Only clear validating if this is still the active validation
-          if (!ac.signal.aborted) {
+          // Clear validating if no other async validation is pending for this field
+          if (!currentFs?.abortController) {
             store.setValidating(name, false);
           }
         }
@@ -207,6 +209,9 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
     return !hasFieldErrors && !hasCrossErrors;
   }
 
+  // Track fields that received cross-field errors so we can clear them
+  let previousCrossFieldErrors = new Set<string>();
+
   function validateCrossField(): Record<string, string> | undefined {
     const crossValidate = store.schema.config.validate;
     if (!crossValidate) return undefined;
@@ -214,12 +219,23 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
     const values = store.getValues();
     const errors = crossValidate(values);
 
+    const newErrorFields = new Set<string>(errors ? Object.keys(errors) : []);
+
+    // Clear previous cross-field errors that are no longer present
+    for (const name of previousCrossFieldErrors) {
+      if (!newErrorFields.has(name)) {
+        store.setError(name as keyof S & string, null);
+      }
+    }
+
+    // Apply new errors
     if (errors) {
       for (const [name, error] of Object.entries(errors)) {
         store.setError(name as keyof S & string, error);
       }
     }
 
+    previousCrossFieldErrors = newErrorFields;
     return errors;
   }
 

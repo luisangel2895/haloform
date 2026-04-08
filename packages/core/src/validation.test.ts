@@ -489,6 +489,42 @@ describe("cross-field validation", () => {
     const valid = await engine.validateAll();
     expect(valid).toBe(false);
   });
+
+  it("clears previous cross-field errors when they are resolved", async () => {
+    const store = createFormStore(
+      createForm(
+        {
+          password: f.text({ required: true }),
+          confirm: f.text({ required: true }),
+        },
+        {
+          validate: (values) => {
+            if (values.password !== values.confirm) {
+              return { confirm: "Passwords do not match" };
+            }
+            return undefined;
+          },
+        },
+      ),
+    );
+    const engine = createValidationEngine(store);
+
+    // First: mismatched passwords
+    store.setValue("password", "abc123");
+    store.setValue("confirm", "xyz789");
+    await engine.validateAll();
+
+    const fields = store.getState().fields as Record<string, { error: string | null }>;
+    expect(fields.confirm.error).toBe("Passwords do not match");
+
+    // Fix: make passwords match
+    store.setValue("confirm", "abc123");
+    const valid = await engine.validateAll();
+
+    const fieldsAfter = store.getState().fields as Record<string, { error: string | null }>;
+    expect(fieldsAfter.confirm.error).toBeNull();
+    expect(valid).toBe(true);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -550,6 +586,88 @@ describe("validating flag", () => {
 
     const afterState = store.getState().fields as Record<string, { validating: boolean }>;
     expect(afterState.username.validating).toBe(false);
+  });
+
+  it("clears validating when async validation is aborted by a new one", async () => {
+    let resolveFirst: (v: true) => void;
+    let resolveSecond: (v: true) => void;
+    const schema = createForm({
+      username: f.text({
+        validate: (_value: string, _signal: AbortSignal) =>
+          new Promise<true>((r) => {
+            if (!resolveFirst) resolveFirst = r;
+            else resolveSecond = r;
+          }),
+      }),
+    });
+    const store = createFormStore(schema);
+    const engine = createValidationEngine(store, { debounceMs: 0 });
+
+    store.setValue("username", "a");
+
+    // Start first validation
+    const first = engine.validateField("username");
+    await flush();
+    expect(
+      (store.getState().fields as Record<string, { validating: boolean }>).username.validating,
+    ).toBe(true);
+
+    // Start second validation (aborts first)
+    const second = engine.validateField("username");
+
+    // Resolve first (already aborted)
+    resolveFirst!(true);
+    await first;
+
+    // validating should still be true (second is in progress)
+    expect(
+      (store.getState().fields as Record<string, { validating: boolean }>).username.validating,
+    ).toBe(true);
+
+    // Resolve second
+    resolveSecond!(true);
+    await second;
+
+    // Now validating should be false
+    expect(
+      (store.getState().fields as Record<string, { validating: boolean }>).username.validating,
+    ).toBe(false);
+  });
+
+  it("clears validating when the last async validation is aborted and field re-validates sync", async () => {
+    let resolveFn: (v: true) => void;
+    const schema = createForm({
+      username: f.text({
+        required: true,
+        validate: (_value: string, _signal: AbortSignal) =>
+          new Promise<true>((r) => { resolveFn = r; }),
+      }),
+    });
+    const store = createFormStore(schema);
+    const engine = createValidationEngine(store, { debounceMs: 0 });
+
+    store.setValue("username", "test");
+
+    // Start async validation
+    const validatePromise = engine.validateField("username");
+    await flush();
+    expect(
+      (store.getState().fields as Record<string, { validating: boolean }>).username.validating,
+    ).toBe(true);
+
+    // Now validate again with empty value (fails built-in required, never reaches async)
+    store.setValue("username", "");
+    const second = engine.validateField("username");
+    // This aborts the first and runs sync validation (required fails)
+
+    resolveFn!(true);
+    await validatePromise;
+    await second;
+
+    // validating should be false — the sync path cleared it
+    expect(
+      (store.getState().fields as Record<string, { validating: boolean }>).username.validating,
+    ).toBe(false);
   });
 });
 

@@ -76,6 +76,7 @@ export function createMultiStepStore<
 
   // Step tracking
   let currentStep = 0;
+  let navigating = false;
   const stepListeners = new Set<(step: number) => void>();
 
   function notifyStepChange(): void {
@@ -135,14 +136,20 @@ export function createMultiStepStore<
     getCurrentStepFields: () => stepFieldNames[currentStep] ?? [],
 
     nextStep: async () => {
-      const valid = await validateStep(currentStep);
-      if (!valid) return false;
+      if (navigating) return false;
+      navigating = true;
+      try {
+        const valid = await validateStep(currentStep);
+        if (!valid) return false;
 
-      if (currentStep < schema.steps.length - 1) {
-        currentStep++;
-        notifyStepChange();
+        if (currentStep < schema.steps.length - 1) {
+          currentStep++;
+          notifyStepChange();
+        }
+        return true;
+      } finally {
+        navigating = false;
       }
-      return true;
     },
 
     prevStep: () => {

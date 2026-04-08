@@ -295,3 +295,26 @@ describe("onStepChange", () => {
     expect(listener).not.toHaveBeenCalled();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Concurrent nextStep guard
+// ---------------------------------------------------------------------------
+
+describe("concurrent nextStep", () => {
+  it("prevents double-advance when nextStep is called concurrently", async () => {
+    const ms = createMultiStepStore(makeCheckoutSchema());
+
+    // Fill step 0 required fields
+    ms.store.setValue("firstName", "Angel");
+    ms.store.setValue("lastName", "Orellana");
+    ms.store.setValue("address", "123 Main St");
+
+    // Call nextStep twice at the same time
+    const [first, second] = await Promise.all([ms.nextStep(), ms.nextStep()]);
+
+    // One should succeed, one should be blocked
+    expect(ms.getCurrentStep()).toBe(1);
+    expect(first).toBe(true);
+    expect(second).toBe(false);
+  });
+});

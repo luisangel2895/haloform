@@ -60,7 +60,7 @@ Most form libraries are tied to a specific platform or ship their own UI. Halofo
 | :arrows_counterclockwise: | **Cross-field validation** | Form-level `validate(values)` for password confirmation, etc. |
 | :iphone: | **React Native ready** | `toTextInputProps()`, `toSwitchProps()` for instant RN integration |
 | :crystal_ball: | **Full type inference** | Schema infers `{ email: string, age: number, agreed: boolean }` |
-| :test_tube: | **126 tests** | Comprehensive coverage across core, React, and Native packages |
+| :test_tube: | **138 tests** | Comprehensive coverage across core, React, and Native packages |
 
 <br>
 
@@ -366,7 +366,7 @@ Everything from `useForm` plus:
 # Install
 pnpm install
 
-# Test (126 tests)
+# Test (138 tests)
 pnpm test
 
 # Build all packages

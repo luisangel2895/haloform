@@ -6,5 +6,5 @@ export default defineConfig({
   dts: true,
   clean: true,
   sourcemap: true,
-  external: ["react", "react-native", "@formix/core"],
+  external: ["react", "react-native", "@haloform/core"],
 });

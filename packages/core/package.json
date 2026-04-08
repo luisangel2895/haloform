@@ -1,7 +1,7 @@
 {
-  "name": "@formix/core",
+  "name": "@haloform/core",
   "version": "0.1.0",
-  "description": "Core engine for formix — schema, types, store, validation",
+  "description": "Core engine for haloform — schema, types, store, validation",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",

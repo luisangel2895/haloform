@@ -1,7 +1,7 @@
 {
-  "name": "@formix/native",
+  "name": "@haloform/native",
   "version": "0.1.0",
-  "description": "React Native adapter for formix",
+  "description": "React Native adapter for haloform",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -20,7 +20,7 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "@formix/core": "workspace:*"
+    "@haloform/core": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

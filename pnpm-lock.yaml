@@ -22,7 +22,7 @@ importers:
 
   packages/native:
     dependencies:
-      '@formix/core':
+      '@haloform/core':
         specifier: workspace:*
         version: link:../core
       react:
@@ -34,7 +34,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@formix/core':
+      '@haloform/core':
         specifier: workspace:*
         version: link:../core
       react:

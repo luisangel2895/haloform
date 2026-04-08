@@ -1,5 +1,5 @@
 {
-  "name": "formix",
+  "name": "haloform",
   "version": "0.0.0",
   "private": true,
   "description": "Headless, schema-driven, cross-platform form engine for React and React Native",

@@ -1,6 +1,7 @@
 export { f, createForm } from "./schema.js";
 export { createFormStore } from "./store.js";
 export { createValidationEngine } from "./validation.js";
+export { createDependencyEngine } from "./dependencies.js";
 
 export type {
   FieldKind,
@@ -30,3 +31,4 @@ export type {
 } from "./types.js";
 export type { FormStore } from "./store.js";
 export type { ValidationEngine } from "./validation.js";
+export type { DependencyEngine } from "./dependencies.js";

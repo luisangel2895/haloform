@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="./assets/logo.svg" alt="haloform" width="320" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/logo-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/logo.svg" />
+    <img src="./assets/logo.svg" alt="haloform" width="320" />
+  </picture>
 </p>
 
 <p align="center">
@@ -7,9 +11,9 @@
 </p>
 
 <p align="center">
-  <a href="#install"><img src="https://img.shields.io/npm/v/@haloform/core?style=flat-square&color=6366f1&label=core" alt="npm core"></a>
-  <a href="#install"><img src="https://img.shields.io/npm/v/@haloform/react?style=flat-square&color=8b5cf6&label=react" alt="npm react"></a>
-  <a href="#install"><img src="https://img.shields.io/npm/v/@haloform/native?style=flat-square&color=a78bfa&label=native" alt="npm native"></a>
+  <a href="https://www.npmjs.com/package/@haloform/core"><img src="https://img.shields.io/npm/v/@haloform/core?style=flat-square&color=6366f1&label=core" alt="npm core"></a>
+  <a href="https://www.npmjs.com/package/@haloform/react"><img src="https://img.shields.io/npm/v/@haloform/react?style=flat-square&color=8b5cf6&label=react" alt="npm react"></a>
+  <a href="https://www.npmjs.com/package/@haloform/native"><img src="https://img.shields.io/npm/v/@haloform/native?style=flat-square&color=a78bfa&label=native" alt="npm native"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="license"></a>
   <img src="https://img.shields.io/badge/types-TypeScript-3178c6?style=flat-square" alt="TypeScript">
   <img src="https://img.shields.io/badge/coverage->90%25-brightgreen?style=flat-square" alt="coverage">
@@ -17,6 +21,16 @@
 
 <p align="center">
   One schema. Two platforms. Zero UI opinions.
+</p>
+
+<p align="center">
+  <a href="#why-haloform">Why</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#install">Install</a> ·
+  <a href="#quick-start">Quick Start</a> ·
+  <a href="#api-reference">API</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#contributing">Contributing</a>
 </p>
 
 ---
@@ -54,11 +68,27 @@ Most form libraries are tied to a specific platform or ship their own UI. Halofo
 
 ```bash
 # Core + React (web)
-pnpm add @haloform/core @haloform/react
+npm install @haloform/core @haloform/react
 
 # Core + React Native
-pnpm add @haloform/core @haloform/native
+npm install @haloform/core @haloform/native
 ```
+
+<details>
+<summary>pnpm / yarn / bun</summary>
+
+```bash
+# pnpm
+pnpm add @haloform/core @haloform/react
+
+# yarn
+yarn add @haloform/core @haloform/react
+
+# bun
+bun add @haloform/core @haloform/react
+```
+
+</details>
 
 <br>
 
@@ -348,6 +378,20 @@ cd examples/web && pnpm install && pnpm dev
 
 <br>
 
+## Contributing
+
+Contributions are welcome! Whether it's a bug report, feature request, or pull request — all input is appreciated.
+
+1. Fork the repository
+2. Create your branch (`git checkout -b feat/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feat/amazing-feature`)
+5. Open a Pull Request
+
+Please make sure all tests pass (`pnpm test`) and the build succeeds (`pnpm build`) before submitting.
+
+<br>
+
 ## License
 
-[MIT](./LICENSE)
+[MIT](./LICENSE) — Made with care by [Angel Orellana](https://angel-orellana.com)

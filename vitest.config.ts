@@ -20,6 +20,13 @@ export default defineConfig({
           setupFiles: ["packages/react/src/setup.ts"],
         },
       },
+      {
+        test: {
+          name: "native",
+          environment: "node",
+          include: ["packages/native/src/**/*.test.ts"],
+        },
+      },
     ],
   },
 });

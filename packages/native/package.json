@@ -20,7 +20,8 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "@haloform/core": "workspace:*"
+    "@haloform/core": "workspace:*",
+    "@haloform/react": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

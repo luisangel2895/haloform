@@ -25,6 +25,9 @@ importers:
       '@haloform/core':
         specifier: workspace:*
         version: link:../core
+      '@haloform/react':
+        specifier: workspace:*
+        version: link:../react
       react:
         specifier: '>=18.0.0'
         version: 19.2.4

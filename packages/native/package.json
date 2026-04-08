@@ -1,6 +1,6 @@
 {
   "name": "@haloform/native",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "React Native adapter for haloform — prop mappers for TextInput and Switch",
   "license": "MIT",
   "author": "Angel Orellana",

@@ -1,8 +1,20 @@
 {
   "name": "@haloform/native",
   "version": "0.1.0",
-  "description": "React Native adapter for haloform",
+  "description": "React Native adapter for haloform — prop mappers for TextInput and Switch",
   "license": "MIT",
+  "author": "Angel Orellana",
+  "homepage": "https://github.com/luisangel2895/haloform#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisangel2895/haloform.git",
+    "directory": "packages/native"
+  },
+  "bugs": {
+    "url": "https://github.com/luisangel2895/haloform/issues"
+  },
+  "keywords": ["form", "react-native", "native", "validation", "headless", "typescript"],
+  "sideEffects": false,
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

@@ -1,8 +1,20 @@
 {
   "name": "@haloform/react",
   "version": "0.1.0",
-  "description": "React adapter for haloform",
+  "description": "React adapter for haloform — useForm and useMultiStepForm hooks",
   "license": "MIT",
+  "author": "Angel Orellana",
+  "homepage": "https://github.com/luisangel2895/haloform#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisangel2895/haloform.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/luisangel2895/haloform/issues"
+  },
+  "keywords": ["form", "react", "hooks", "useForm", "validation", "headless", "typescript"],
+  "sideEffects": false,
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

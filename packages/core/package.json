@@ -3,6 +3,18 @@
   "version": "0.1.0",
   "description": "Core engine for haloform — schema, types, store, validation",
   "license": "MIT",
+  "author": "Angel Orellana",
+  "homepage": "https://github.com/luisangel2895/haloform#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisangel2895/haloform.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/luisangel2895/haloform/issues"
+  },
+  "keywords": ["form", "forms", "schema", "validation", "react", "react-native", "headless", "typescript"],
+  "sideEffects": false,
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

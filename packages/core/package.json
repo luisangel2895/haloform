@@ -1,6 +1,6 @@
 {
   "name": "@haloform/core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Core engine for haloform — schema, types, store, validation",
   "license": "MIT",
   "author": "Angel Orellana",
@@ -26,7 +26,7 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": ["dist", "README.md"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"

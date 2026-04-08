@@ -1,6 +1,6 @@
 {
   "name": "@haloform/native",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "React Native adapter for haloform — prop mappers for TextInput and Switch",
   "license": "MIT",
   "author": "Angel Orellana",
@@ -26,14 +26,14 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": ["dist", "README.md"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
   },
   "dependencies": {
-    "@haloform/core": "workspace:*",
-    "@haloform/react": "workspace:*"
+    "@haloform/core": "^0.1.2",
+    "@haloform/react": "^0.1.2"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

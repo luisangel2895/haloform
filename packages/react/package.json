@@ -1,6 +1,6 @@
 {
   "name": "@haloform/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React adapter for haloform — useForm and useMultiStepForm hooks",
   "license": "MIT",
   "author": "Angel Orellana",

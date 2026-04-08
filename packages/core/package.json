@@ -1,6 +1,6 @@
 {
   "name": "@haloform/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Core engine for haloform — schema, types, store, validation",
   "license": "MIT",
   "author": "Angel Orellana",

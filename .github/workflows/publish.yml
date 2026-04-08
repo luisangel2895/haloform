@@ -30,6 +30,18 @@ jobs:
 
       - run: pnpm test
 
+      - name: Resolve workspace dependencies
+        run: |
+          CORE_VERSION=$(node -p "require('./packages/core/package.json').version")
+          REACT_VERSION=$(node -p "require('./packages/react/package.json').version")
+
+          cd packages/react
+          sed -i "s/\"workspace:\*\"/\"^$CORE_VERSION\"/" package.json
+
+          cd ../native
+          sed -i "s/\"@haloform\/core\": \"workspace:\*\"/\"@haloform\/core\": \"^$CORE_VERSION\"/" package.json
+          sed -i "s/\"@haloform\/react\": \"workspace:\*\"/\"@haloform\/react\": \"^$REACT_VERSION\"/" package.json
+
       - name: Publish @haloform/core
         run: npm publish --access public --provenance --no-git-checks
         working-directory: packages/core

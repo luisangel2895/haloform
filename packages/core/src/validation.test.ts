@@ -492,6 +492,68 @@ describe("cross-field validation", () => {
 });
 
 // ---------------------------------------------------------------------------
+// NaN / Infinity number validation
+// ---------------------------------------------------------------------------
+
+describe("NaN and Infinity validation", () => {
+  it("rejects NaN for number fields with min/max", async () => {
+    const store = createFormStore(
+      createForm({ age: f.number({ min: 0, max: 100 }) }),
+    );
+    const engine = createValidationEngine(store);
+
+    store.setValue("age", NaN);
+    const error = await engine.validateField("age");
+    expect(error).toBe("Must be a valid number");
+  });
+
+  it("rejects Infinity for number fields", async () => {
+    const store = createFormStore(
+      createForm({ age: f.number({ min: 0 }) }),
+    );
+    const engine = createValidationEngine(store);
+
+    store.setValue("age", Infinity);
+    const error = await engine.validateField("age");
+    expect(error).toBe("Must be a valid number");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// validating flag
+// ---------------------------------------------------------------------------
+
+describe("validating flag", () => {
+  it("sets validating=true during async validation and false after", async () => {
+    let resolveFn: (v: true) => void;
+    const schema = createForm({
+      username: f.text({
+        validate: (_value: string, _signal: AbortSignal) =>
+          new Promise<true>((r) => { resolveFn = r; }),
+      }),
+    });
+    const store = createFormStore(schema);
+    const engine = createValidationEngine(store, { debounceMs: 0 });
+
+    store.setValue("username", "test");
+
+    const validatePromise = engine.validateField("username");
+
+    // Should be validating
+    await flush();
+    const duringState = store.getState().fields as Record<string, { validating: boolean }>;
+    expect(duringState.username.validating).toBe(true);
+
+    // Resolve the async validator
+    resolveFn!(true);
+    await validatePromise;
+
+    const afterState = store.getState().fields as Record<string, { validating: boolean }>;
+    expect(afterState.username.validating).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // dispose
 // ---------------------------------------------------------------------------
 

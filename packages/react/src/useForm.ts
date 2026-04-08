@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useSyncExternalStore } from "react";
+import { useMemo, useCallback, useEffect, useSyncExternalStore } from "react";
 import {
   createFormStore,
   createValidationEngine,
@@ -45,14 +45,17 @@ export function useForm<S extends FormSchemaDefinition>(
   schema: FormSchema<S>,
 ): UseFormReturn<S> {
   // Create store, validation, and dependency engines once (stable reference)
-  const { store, validation } = useMemo(() => {
+  const { store, validation, cleanup } = useMemo(() => {
     const s = createFormStore(schema);
     const v = createValidationEngine(s);
     const d = createDependencyEngine(s);
-    d.autoResolve();
-    return { store: s, validation: v };
+    const unsubDeps = d.autoResolve();
+    return { store: s, validation: v, cleanup: () => { v.dispose(); unsubDeps(); } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Cleanup on unmount
+  useEffect(() => cleanup, [cleanup]);
 
   // Subscribe to store changes via useSyncExternalStore
   const state = useSyncExternalStore(
@@ -105,13 +108,16 @@ export function useForm<S extends FormSchemaDefinition>(
     (onSubmit: (values: InferFormValues<S>) => void | Promise<void>) => {
       return async (e?: { preventDefault?: () => void }) => {
         e?.preventDefault?.();
+
+        // Guard against concurrent submits
+        if (store.getState().isSubmitting) return;
+
         store.incrementSubmitCount();
-
-        const valid = await validation.validateAll();
-        if (!valid) return;
-
         store.setSubmitting(true);
         try {
+          const valid = await validation.validateAll();
+          if (!valid) return;
+
           await onSubmit(store.getValues());
         } finally {
           store.setSubmitting(false);

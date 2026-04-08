@@ -169,4 +169,20 @@ describe("toNumberInputProps", () => {
 
     expect(props.editable).toBe(false);
   });
+
+  it("ignores empty string input (does not convert to 0)", () => {
+    const field = makeNumberField({ value: 5 });
+    const props = toNumberInputProps(field);
+
+    props.onChangeText("");
+    expect(field.onChange).not.toHaveBeenCalled();
+  });
+
+  it("ignores lone minus sign", () => {
+    const field = makeNumberField({ value: 0 });
+    const props = toNumberInputProps(field);
+
+    props.onChangeText("-");
+    expect(field.onChange).not.toHaveBeenCalled();
+  });
 });

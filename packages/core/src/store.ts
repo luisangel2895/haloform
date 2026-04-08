@@ -34,6 +34,8 @@ export type FormStore<S extends FormSchemaDefinition = FormSchemaDefinition> = {
   setDisabled: (name: keyof S & string, disabled: boolean) => void;
   /** Set the field's visibility */
   setVisible: (name: keyof S & string, visible: boolean) => void;
+  /** Set the field's validating state */
+  setValidating: (name: keyof S & string, validating: boolean) => void;
   /** Reset the entire form to initial state */
   reset: () => void;
   /** Reset a single field to its initial state */
@@ -185,6 +187,13 @@ export function createFormStore<S extends FormSchemaDefinition>(
       updateField(name, (field) => ({
         ...field,
         visible,
+      }));
+    },
+
+    setValidating: (name, validating) => {
+      updateField(name, (field) => ({
+        ...field,
+        validating,
       }));
     },
 

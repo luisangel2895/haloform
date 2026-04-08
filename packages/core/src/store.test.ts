@@ -300,6 +300,31 @@ describe("incrementSubmitCount", () => {
 });
 
 // ---------------------------------------------------------------------------
+// setValidating
+// ---------------------------------------------------------------------------
+
+describe("setValidating", () => {
+  it("sets a field's validating flag", () => {
+    const store = createFormStore(makeTestSchema());
+
+    store.setValidating("name", true);
+    const state = store.getState();
+    const field = (state.fields as Record<string, { validating: boolean }>).name;
+    expect(field.validating).toBe(true);
+  });
+
+  it("clears a field's validating flag", () => {
+    const store = createFormStore(makeTestSchema());
+
+    store.setValidating("name", true);
+    store.setValidating("name", false);
+    const state = store.getState();
+    const field = (state.fields as Record<string, { validating: boolean }>).name;
+    expect(field.validating).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // schema reference
 // ---------------------------------------------------------------------------
 

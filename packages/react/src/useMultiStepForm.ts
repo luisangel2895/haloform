@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useSyncExternalStore, useState } from "react";
+import { useMemo, useCallback, useEffect, useSyncExternalStore, useState } from "react";
 import {
   createMultiStepStore,
   type MultiStepSchema,
@@ -66,9 +66,13 @@ export function useMultiStepForm<
   // Step state — driven by onStepChange
   const [step, setStep] = useState(0);
 
-  // Subscribe to step changes
-  useMemo(() => {
-    ms.onStepChange((s) => setStep(s));
+  // Subscribe to step changes + cleanup on unmount
+  useEffect(() => {
+    const unsubStep = ms.onStepChange((s) => setStep(s));
+    return () => {
+      unsubStep();
+      ms.validation.dispose();
+    };
   }, [ms]);
 
   // Subscribe to the underlying store for field state
@@ -117,13 +121,16 @@ export function useMultiStepForm<
     ) => {
       return async (e?: { preventDefault?: () => void }) => {
         e?.preventDefault?.();
+
+        // Guard against concurrent submits
+        if (ms.store.getState().isSubmitting) return;
+
         ms.store.incrementSubmitCount();
-
-        const valid = await ms.validateAll();
-        if (!valid) return;
-
         ms.store.setSubmitting(true);
         try {
+          const valid = await ms.validateAll();
+          if (!valid) return;
+
           await onSubmit(ms.getValues());
         } finally {
           ms.store.setSubmitting(false);

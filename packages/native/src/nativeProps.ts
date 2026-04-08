@@ -108,6 +108,7 @@ export function toNumberInputProps(field: FieldHandle<number>): NativeNumberInpu
     value: String(field.value),
     numericValue: field.value,
     onChangeText: (text: string) => {
+      if (text === "" || text === "-") return;
       const num = Number(text);
       if (!Number.isNaN(num)) {
         field.onChange(num);

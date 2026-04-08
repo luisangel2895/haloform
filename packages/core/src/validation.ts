@@ -47,6 +47,9 @@ function runBuiltInValidation(field: FieldDef, value: unknown): string | null {
 
   // Number-based validations
   if (typeof value === "number") {
+    if (!Number.isFinite(value)) {
+      return "Must be a valid number";
+    }
     const min = config.min as number | undefined;
     if (min !== undefined && value < min) {
       return `Must be at least ${min}`;
@@ -152,6 +155,7 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
       const result = customValidate(value as never, ac.signal as never);
 
       if (result instanceof Promise) {
+        store.setValidating(name, true);
         try {
           const asyncResult = await result;
           // Check if this validation was aborted while awaiting
@@ -169,6 +173,10 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
           if (currentFs?.abortController === ac) {
             currentFs.abortController = null;
           }
+          // Only clear validating if this is still the active validation
+          if (!ac.signal.aborted) {
+            store.setValidating(name, false);
+          }
         }
       } else {
         // Sync validation
@@ -179,6 +187,7 @@ export function createValidationEngine<S extends FormSchemaDefinition>(
       }
     } catch {
       fs.abortController = null;
+      store.setValidating(name, false);
       return null;
     }
   }

@@ -176,3 +176,29 @@ export type FormState<S extends FormSchemaDefinition = FormSchemaDefinition> = {
   isSubmitting: boolean;
   submitCount: number;
 };
+
+// ---------------------------------------------------------------------------
+// Multi-step form types
+// ---------------------------------------------------------------------------
+
+export type StepDefinition<S extends FormSchemaDefinition = FormSchemaDefinition> = {
+  name: string;
+  fields: S;
+  validate?: CrossFieldValidator<S>;
+};
+
+export type MultiStepSchema<
+  Steps extends readonly StepDefinition[] = readonly StepDefinition[],
+> = {
+  steps: Steps;
+};
+
+/** Merges all step field definitions into a single flat schema */
+export type MergeStepFields<Steps extends readonly StepDefinition[]> =
+  Steps extends readonly [infer First, ...infer Rest]
+    ? First extends StepDefinition<infer S>
+      ? Rest extends readonly StepDefinition[]
+        ? S & MergeStepFields<Rest>
+        : S
+      : FormSchemaDefinition
+    : FormSchemaDefinition;
